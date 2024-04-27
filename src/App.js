@@ -1,23 +1,10 @@
 import React from 'react';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-import { HomeOutlined } from '@ant-design/icons';
-const { Header, Content, Footer } = Layout;
-
-const items = [
-  {
-    key: 1,
-    label: "Home",
-    icon: <HomeOutlined />
-  },
-  {
-    key: 2,
-    label: "Products"
-  },
-  {
-    key: 3,
-    label: "About"
-  }
-]
+import { Layout, theme } from 'antd';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import "./App.css"
+import { Outlet } from 'react-router-dom';
+const { Content } = Layout;
 
 const App = () => {
 
@@ -26,25 +13,8 @@ const App = () => {
   } = theme.useToken();
 
   return (
-    <Layout>
-      <Header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <div className="demo-logo" />
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          items={items}
-          style={{
-            flex: 1,
-            minWidth: 0,
-          }}
-        />
-      </Header>
+    <Layout className='Layout'>
+      <Header />
 
       <Content
         style={{
@@ -60,17 +30,11 @@ const App = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          <Outlet />
         </div>
       </Content>
 
-      <Footer
-        style={{
-          textAlign: 'center',
-        }}
-      >
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
+      <Footer />
     </Layout>
   );
 };
