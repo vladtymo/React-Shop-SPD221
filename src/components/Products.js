@@ -72,7 +72,7 @@ export default function Products() {
     }, []);
 
     return (
-        <Table columns={columns} dataSource={products} />
+        <Table columns={columns} pagination={{ pageSize: 5 }} dataSource={products} />
     );
 }
 
