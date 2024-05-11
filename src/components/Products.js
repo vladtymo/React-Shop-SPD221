@@ -1,45 +1,85 @@
-import { List } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { Space, Table, Tag } from 'antd';
 
-const api = "https://dummyjson.com/products";
+const columns = [
+    {
+        title: 'Id',
+        dataIndex: 'id',
+        key: 'id'
+    },
+    {
+        title: 'Image',
+        dataIndex: 'imageUrl',
+        key: 'imageUrl',
+        render: (text, item) => <img style={styles.imageStyle} src={text} alt={item.name} />,
+    },
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        key: 'name',
+        render: (text) => <a>{text}</a>,
+    },
+    {
+        title: 'Price',
+        dataIndex: 'price',
+        key: 'price',
+        render: (text) => <span>{text}$</span>,
+    },
+    {
+        title: 'Discount',
+        dataIndex: 'discount',
+        key: 'discount',
+        render: (text) => text > 0 ? <Tag color="geekblue">{text}%</Tag> : "-",
+    },
+    {
+        title: 'Category',
+        dataIndex: 'categoryName',
+        key: 'categoryName'
+    },
+    {
+        title: 'Stock',
+        dataIndex: 'inStock',
+        key: 'inStock',
+        render: (text) => text ?
+            <Tag color="green">In Stock</Tag> :
+            <Tag color="volcano">Out Of Stock</Tag>,
+    },
+    {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+                <a>Show</a>
+                <a>Edit</a>
+                <a>Delete</a>
+            </Space>
+        ),
+    },
+];
+
+const api = "https://shopapi-pv221.azurewebsites.net/api/products/all";
 
 export default function Products() {
 
     const [products, setProducts] = useState([]);
 
-    // starts on component mount
     useEffect(() => {
-        fetch(api)
-            .then(res => res.json())
+        fetch(api).then(res => res.json())
             .then(data => {
-                console.log(data.products);
-                //products = data.products; // does not update HTML
-                setProducts(data.products); // update HTML
-            });
+                console.log(data);
+                setProducts(data);
+            })
     }, []);
 
-    // starts on products changed
-    // useEffect(() => {
-    //     console.log("Component updated!");
-    // }, [products]);
-
     return (
-        <>
-            <h1>Products List</h1>
+        <Table columns={columns} dataSource={products} />
+    );
+}
 
-            <List
-                size="small"
-                header={<div>Header</div>}
-                footer={<div>Footer</div>}
-                bordered
-                dataSource={products}
-                renderItem={(i) => <List.Item>{i.title} - {i.price}$</List.Item>}
-            />
-            {/* <ol>
-                {products.map((i, index) =>
-                    <li key={i.id}>{i.title} - {i.price}$</li>
-                )}
-            </ol> */}
-        </>
-    )
+const styles = {
+    imageStyle: {
+        height: 50,
+        width: 50,
+        objectFit: "contain"
+    }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, Menu } from 'antd';
-import { HomeOutlined, InfoCircleOutlined, ProductOutlined } from '@ant-design/icons';
+import { EyeOutlined, HomeOutlined, InfoCircleOutlined, ProductOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 const { Header: AntHeader } = Layout;
 
@@ -17,6 +17,11 @@ const items = [
     },
     {
         key: 3,
+        label: <Link to="fake-products">Fake Products</Link>,
+        icon: <EyeOutlined />
+    },
+    {
+        key: 4,
         label: <Link to="about">About</Link>,
         icon: <InfoCircleOutlined />
     }
