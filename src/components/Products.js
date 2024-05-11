@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
+import { Link } from 'react-router-dom';
 
 const columns = [
     {
@@ -72,7 +73,14 @@ export default function Products() {
     }, []);
 
     return (
-        <Table columns={columns} pagination={{ pageSize: 5 }} dataSource={products} />
+        <>
+            <Button style={{ marginBottom: 10 }} type="primary">
+                <Link to="create">
+                    Create New Product
+                </Link>
+            </Button>
+            <Table columns={columns} pagination={{ pageSize: 5 }} dataSource={products} />
+        </>
     );
 }
 
