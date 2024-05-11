@@ -7,6 +7,7 @@ export default function Products() {
 
     const [products, setProducts] = useState([]);
 
+    // starts on component mount
     useEffect(() => {
         fetch(api)
             .then(res => res.json())
@@ -16,6 +17,11 @@ export default function Products() {
                 setProducts(data.products); // update HTML
             });
     }, []);
+
+    // starts on products changed
+    // useEffect(() => {
+    //     console.log("Component updated!");
+    // }, [products]);
 
     return (
         <>

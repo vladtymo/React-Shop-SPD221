@@ -15,7 +15,6 @@ const App = () => {
   return (
     <Layout className='Layout'>
       <Header />
-
       <Content
         style={{
           padding: '0 48px',
