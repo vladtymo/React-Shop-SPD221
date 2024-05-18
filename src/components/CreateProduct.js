@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Select, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { UploadOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const api = process.env.REACT_APP_API + "products";
@@ -62,6 +62,7 @@ export default function CreateProduct() {
 
     return (
         <>
+            <Button onClick={() => navigate(-1)} type="text" icon={<ArrowLeftOutlined />}></Button>
             <h2 style={{ textAlign: "center" }}>Create New Product</h2>
             <Form
                 name="basic"
