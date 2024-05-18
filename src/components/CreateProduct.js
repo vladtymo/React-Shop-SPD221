@@ -2,42 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Select, Upload } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { UploadOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const api = process.env.REACT_APP_API + "products";
-
-const onFinish = (values) => {
-    console.log('Success:', values);
-
-    // set original file
-    values.image = values.image.originFileObj;
-
-    const data = new FormData();
-
-    for (const prop in values) {
-        data.append(prop, values[prop]);
-    }
-
-    console.log(values);
-
-    // TODO: use Axios instead of fetch
-    fetch(api, {
-        method: "POST",
-        body: data
-    }).then(res => {
-        if (res.status == 200)
-            alert("Created!");
-        else
-            alert("Something went wrong!");
-    });
-};
-
-const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-};
 
 export default function CreateProduct() {
 
     const [categories, setCategories] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetch(process.env.REACT_APP_API + "products/categories")
@@ -47,6 +20,38 @@ export default function CreateProduct() {
                 setCategories(options);
             });
     }, []);
+
+    const onFinish = (values) => {
+        console.log('Success:', values);
+
+        // set original file
+        values.image = values.image.originFileObj;
+
+        const data = new FormData();
+
+        for (const prop in values) {
+            data.append(prop, values[prop]);
+        }
+
+        console.log(values);
+
+        // TODO: use Axios instead of fetch
+        fetch(api, {
+            method: "POST",
+            body: data
+        }).then(res => {
+            if (res.status == 200) {
+                alert("Created!");
+                navigate(-1);
+            }
+            else
+                alert("Something went wrong!");
+        });
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
 
     const normFile = (e) => {
         if (Array.isArray(e)) {
@@ -131,6 +136,7 @@ export default function CreateProduct() {
                 <Form.Item
                     label="Description"
                     name="description"
+                    initialValue={null}
                 >
                     <TextArea />
                 </Form.Item>
@@ -140,6 +146,12 @@ export default function CreateProduct() {
                     label="Image"
                     valuePropName="file"
                     getValueFromEvent={normFile}
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select product image!',
+                        },
+                    ]}
                 >
                     <Upload>
                         <Button icon={<UploadOutlined />}>Click to Choose a File</Button>
@@ -148,7 +160,8 @@ export default function CreateProduct() {
 
                 <Form.Item
                     name="inStock"
-                    valuePropName="checked">
+                    valuePropName="checked"
+                    initialValue={false}>
                     <Checkbox>In Stock</Checkbox>
                 </Form.Item>
 
