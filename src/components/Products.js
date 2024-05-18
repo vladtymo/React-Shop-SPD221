@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Space, Table, Tag } from 'antd';
+import { Button, Popconfirm, Space, Table, Tag, message } from 'antd';
 import { Link } from 'react-router-dom';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { productsService } from '../services/products.service';
 
-const columns = [
+const getColumns = (deleteHandler) => [
     {
         title: 'Id',
         dataIndex: 'id',
@@ -50,26 +52,44 @@ const columns = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a>Show</a>
-                <a>Edit</a>
-                <a>Delete</a>
+                <Button icon={<EditOutlined />}></Button>
+                <Popconfirm
+                    title="Delete the product"
+                    description={`Are you sure to delete the ${record.name}?`}
+                    onConfirm={() => deleteHandler(record.id)}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <Button danger icon={<DeleteOutlined />}></Button>
+                </Popconfirm>
+
             </Space>
         ),
     },
 ];
 
-const api = process.env.REACT_APP_API + "products/all";
-
 export default function Products() {
 
     const [products, setProducts] = useState([]);
 
+    const deleteHandler = async (id) => {
+        const res = await productsService.delete(id);
+        if (res.status === 200) {
+            message.success('Product deleted successfully');
+
+            setProducts(products.filter(x => x.id != id));
+        }
+        else
+            message.error('Something went wrong!');
+    };
+
+    const loadProducts = async () => {
+        const res = await productsService.getAll();
+        setProducts(res.data);
+    }
+
     useEffect(() => {
-        fetch(api).then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setProducts(data);
-            })
+        loadProducts();
     }, []);
 
     return (
@@ -79,7 +99,7 @@ export default function Products() {
                     Create New Product
                 </Link>
             </Button>
-            <Table columns={columns} pagination={{ pageSize: 5 }} dataSource={products} />
+            <Table columns={getColumns(deleteHandler)} pagination={{ pageSize: 5 }} dataSource={products} />
         </>
     );
 }
