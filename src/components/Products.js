@@ -52,7 +52,9 @@ const getColumns = (deleteHandler) => [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <Button icon={<EditOutlined />}></Button>
+                <Link to={`edit/${record.id}`}>
+                    <Button icon={<EditOutlined />}></Button>
+                </Link>
                 <Popconfirm
                     title="Delete the product"
                     description={`Are you sure to delete the ${record.name}?`}

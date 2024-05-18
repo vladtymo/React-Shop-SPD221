@@ -2,18 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Form, Input, InputNumber, Select, Upload, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { productsService } from '../services/products.service';
+import { useForm } from 'antd/es/form/Form';
 
-const api = process.env.REACT_APP_API + "products";
-
-export default function CreateProduct() {
+export default function ProductForm() {
 
     const [categories, setCategories] = useState([]);
+    const params = useParams();
+    const [form] = Form.useForm();
+    const [editMode, setEditMode] = useState(false);
+    const [product, setProduct] = useState(null);
 
     const navigate = useNavigate();
 
     useEffect(() => {
+        loadProduct();
+
+        // TODO: use service
         fetch(process.env.REACT_APP_API + "products/categories")
             .then(res => res.json())
             .then(data => {
@@ -22,20 +28,43 @@ export default function CreateProduct() {
             });
     }, []);
 
-    const onFinish = async (values) => {
-        console.log('Success:', values);
+    const loadProduct = async () => {
+        if (params.id) {
+            setEditMode(true);
 
-        // set original file
-        values.image = values.image.originFileObj;
-
-        const res = await productsService.create(values);
-
-        if (res.status == 200) {
-            message.success("Product created successfully!");
-            navigate(-1);
+            const res = await productsService.get(params.id);
+            setProduct(res.data);
+            form.setFieldsValue(res.data);
         }
-        else
-            alert("Something went wrong!");
+    }
+
+    const onFinish = async (values) => {
+
+        if (editMode) {
+            // add neccessary data
+            values.id = product.id;
+            values.imageUrl = product.imageUrl;
+
+            const res = await productsService.edit(values);
+            console.log(res);
+
+            if (res.status == 200) {
+                message.success("Product updated successfully!");
+                navigate(-1);
+            }
+            else
+                alert("Something went wrong!");
+        }
+        else {
+            const res = await productsService.create(values);
+
+            if (res.status == 200) {
+                message.success("Product created successfully!");
+                navigate(-1);
+            }
+            else
+                alert("Something went wrong!");
+        }
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -46,16 +75,17 @@ export default function CreateProduct() {
         if (Array.isArray(e)) {
             return e;
         }
-        return e?.file;
+        // set original file
+        return e?.file.originFileObj;
     };
 
     return (
         <>
             <Button onClick={() => navigate(-1)} type="text" icon={<ArrowLeftOutlined />}></Button>
-            <h2 style={{ textAlign: "center" }}>Create New Product</h2>
+            <h2 style={{ textAlign: "center" }}>{editMode ? "Edit" : "Create"} Product</h2>
             <Form
                 name="basic"
-
+                form={form}
                 style={{
                     maxWidth: 500,
                     margin: "auto"
@@ -138,7 +168,7 @@ export default function CreateProduct() {
                     getValueFromEvent={normFile}
                     rules={[
                         {
-                            required: true,
+                            required: editMode ? false : true,
                             message: 'Please select product image!',
                         },
                     ]}
@@ -157,7 +187,7 @@ export default function CreateProduct() {
 
                 <Form.Item style={{ textAlign: "center" }}>
                     <Button type="primary" htmlType="submit">
-                        Create
+                        {editMode ? "Edit" : "Create"}
                     </Button>
                 </Form.Item>
             </Form >

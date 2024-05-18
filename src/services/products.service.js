@@ -8,7 +8,7 @@ export const productsService = {
     },
 
     get(id) {
-
+        return axios.get(api + id);
     },
 
     create(model) {
@@ -21,7 +21,13 @@ export const productsService = {
         return axios.post(api, data);
     },
 
+    edit(model) {
+        return axios.put(api, model);
+    },
+
     delete(id) {
         return axios.delete(api + id);
-    }
+    },
+    // TODO: implement
+    getCategories() { }
 }
