@@ -58,7 +58,7 @@ const columns = [
     },
 ];
 
-const api = "https://shopapi-pv221.azurewebsites.net/api/products/all";
+const api = process.env.REACT_APP_API + "products/all";
 
 export default function Products() {
 
