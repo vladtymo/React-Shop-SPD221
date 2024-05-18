@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Form, Input, InputNumber, Select, Upload } from 'antd';
+import { Button, Checkbox, Form, Input, InputNumber, Select, Upload, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { ArrowLeftOutlined, UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { productsService } from '../services/products.service';
 
 const api = process.env.REACT_APP_API + "products";
 
@@ -21,32 +22,20 @@ export default function CreateProduct() {
             });
     }, []);
 
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log('Success:', values);
 
         // set original file
         values.image = values.image.originFileObj;
 
-        const data = new FormData();
+        const res = await productsService.create(values);
 
-        for (const prop in values) {
-            data.append(prop, values[prop]);
+        if (res.status == 200) {
+            message.success("Product created successfully!");
+            navigate(-1);
         }
-
-        console.log(values);
-
-        // TODO: use Axios instead of fetch
-        fetch(api, {
-            method: "POST",
-            body: data
-        }).then(res => {
-            if (res.status == 200) {
-                alert("Created!");
-                navigate(-1);
-            }
-            else
-                alert("Something went wrong!");
-        });
+        else
+            alert("Something went wrong!");
     };
 
     const onFinishFailed = (errorInfo) => {
@@ -119,7 +108,7 @@ export default function CreateProduct() {
                 </Form.Item>
 
                 <Form.Item
-                    label="Category Id"
+                    label="Category"
                     name="categoryId"
                     rules={[
                         {
