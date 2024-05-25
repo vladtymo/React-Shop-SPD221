@@ -22,7 +22,15 @@ export const productsService = {
     },
 
     edit(model) {
-        return axios.put(api, model);
+        const data = new FormData();
+
+        for (const prop in model) {
+            if (model[prop] == null) continue;
+
+            data.append(prop, model[prop]);
+        }
+
+        return axios.put(api, data); // model in Form Content
     },
 
     delete(id) {

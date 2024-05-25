@@ -44,6 +44,7 @@ export default function ProductForm() {
             // add neccessary data
             values.id = product.id;
             values.imageUrl = product.imageUrl;
+            values.newImage = values.image;
 
             const res = await productsService.edit(values);
             console.log(res);
