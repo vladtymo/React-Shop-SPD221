@@ -7,6 +7,8 @@ import Home from './components/Home';
 import FakeProducts from './components/FakeProducts';
 import Products from './components/Products';
 import ProductForm from './components/ProductForm';
+import Register from './components/Register';
+import Login from './components/Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +17,8 @@ root.render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<Home />} />
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
         <Route path="products" element={<Products />} />
         <Route path="products/create" element={<ProductForm />} />
         <Route path="products/edit/:id" element={<ProductForm />} />

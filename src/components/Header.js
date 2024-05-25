@@ -1,33 +1,54 @@
 import React from 'react'
-import { Layout, Menu } from 'antd';
-import { EyeOutlined, HomeOutlined, InfoCircleOutlined, ProductOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu } from 'antd';
+import { EyeOutlined, HomeOutlined, InfoCircleOutlined, LoginOutlined, PlusCircleOutlined, ProductOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { accountsService } from '../services/accounts.service';
 const { Header: AntHeader } = Layout;
 
-const items = [
-    {
-        key: 1,
-        label: <Link to="/">Home</Link>,
-        icon: <HomeOutlined />
-    },
-    {
-        key: 2,
-        label: <Link to="products">Products</Link>,
-        icon: <ProductOutlined />
-    },
-    {
-        key: 3,
-        label: <Link to="fake-products">Fake Products</Link>,
-        icon: <EyeOutlined />
-    },
-    {
-        key: 4,
-        label: <Link to="about">About</Link>,
-        icon: <InfoCircleOutlined />
-    }
-]
-
 export default function Header() {
+
+    const onLogout = async () => {
+        await accountsService.logout();
+    }
+
+    const items = [
+        {
+            key: 1,
+            label: <Link to="/">Home</Link>,
+            icon: <HomeOutlined />
+        },
+        {
+            key: 2,
+            label: <Link to="products">Products</Link>,
+            icon: <ProductOutlined />
+        },
+        {
+            key: 3,
+            label: <Link to="fake-products">Fake Products</Link>,
+            icon: <EyeOutlined />
+        },
+        {
+            key: 4,
+            label: <Link to="about">About</Link>,
+            icon: <InfoCircleOutlined />
+        },
+        {
+            key: 5,
+            label: <Link to="register">Register</Link>,
+            icon: <PlusCircleOutlined />
+        },
+        {
+            key: 6,
+            label: <Link to="login">Login</Link>,
+            icon: <LoginOutlined />
+        },
+        // {
+        //     key: 7,
+        //     label: <a onClick={onLogout}></a>,
+        //     icon: <LoginOutlined />
+        // }
+    ]
+
     return (
         <AntHeader
             style={{
