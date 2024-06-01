@@ -9,23 +9,26 @@ import Products from './components/Products';
 import ProductForm from './components/ProductForm';
 import Register from './components/Register';
 import Login from './components/Login';
+import { UserContext, UserProvider } from './contexts/user.context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // <React.StrictMode>
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}>
-        <Route index element={<Home />} />
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/create" element={<ProductForm />} />
-        <Route path="products/edit/:id" element={<ProductForm />} />
-        <Route path="fake-products" element={<FakeProducts />} />
-        <Route path="*" element={<p>Page Not Found!</p>} />
-      </Route>
-    </Routes>
-  </BrowserRouter>
-  // </React.StrictMode>
+  <UserProvider>
+    {/* <React.StrictMode> */}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />}>
+          <Route index element={<Home />} />
+          <Route path="register" element={<Register />} />
+          <Route path="login" element={<Login />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/create" element={<ProductForm />} />
+          <Route path="products/edit/:id" element={<ProductForm />} />
+          <Route path="fake-products" element={<FakeProducts />} />
+          <Route path="*" element={<p>Page Not Found!</p>} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+    {/* </React.StrictMode> */}
+  </UserProvider>
 );

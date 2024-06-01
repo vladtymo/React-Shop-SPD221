@@ -1,16 +1,20 @@
-import React from 'react'
-import { Button, Layout, Menu } from 'antd';
-import { EyeOutlined, HomeOutlined, InfoCircleOutlined, LoginOutlined, PlusCircleOutlined, ProductOutlined } from '@ant-design/icons';
+import React, { useContext } from 'react'
+import { Button, Layout, Menu, Space } from 'antd';
+import { EyeOutlined, HomeOutlined, InfoCircleOutlined, LoginOutlined, LogoutOutlined, PlusCircleOutlined, ProductOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { accountsService } from '../services/accounts.service';
 import { tokensService } from '../services/tokens.service';
+import { UserContext } from '../contexts/user.context';
 const { Header: AntHeader } = Layout;
 
 export default function Header() {
 
+    const { isAuth, setIsAuth, email } = useContext(UserContext);
+
     const onLogout = async () => {
         //await accountsService.logout();
         tokensService.clear();
+        setIsAuth(false);
     }
 
     const items = [
@@ -33,16 +37,6 @@ export default function Header() {
             key: 4,
             label: <Link to="about">About</Link>,
             icon: <InfoCircleOutlined />
-        },
-        {
-            key: 5,
-            label: <Link to="register">Register</Link>,
-            icon: <PlusCircleOutlined />
-        },
-        {
-            key: 6,
-            label: <Link to="login">Login</Link>,
-            icon: <LoginOutlined />
         },
         // {
         //     key: 7,
@@ -70,7 +64,19 @@ export default function Header() {
                 }}
             />
 
-            <span onClick={onLogout} style={{ color: "white", cursor: "pointer" }}><LoginOutlined /></span>
+            {
+                isAuth
+                    ?
+                    <Space>
+                        <span style={{ color: "white" }}>Hello, {email}</span>
+                        <span onClick={onLogout} style={{ color: "white", cursor: "pointer" }}><LogoutOutlined /></span>
+                    </Space>
+                    :
+                    <Space size={"middle"}>
+                        <Link style={{ color: "white" }} to="register">Register <PlusCircleOutlined /></Link>
+                        <Link style={{ color: "white" }} to="login">Login <LoginOutlined /></Link>
+                    </Space>
+            }
 
         </AntHeader>
     )

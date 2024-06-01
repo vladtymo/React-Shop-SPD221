@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { accountsService } from '../services/accounts.service';
 import { tokensService } from '../services/tokens.service';
+import { UserContext } from '../contexts/user.context';
 
 export default function Login() {
     const navigate = useNavigate();
+    const { setIsAuth, setEmail } = useContext(UserContext);
 
     const onFinish = async (values) => {
         console.log('Success:', values);
@@ -13,12 +15,19 @@ export default function Login() {
         try {
             const res = await accountsService.login(values);
 
-            console.log(res.data);
+            if (res.status === 200) {
+                console.log(res.data);
 
-            tokensService.save(res.data);
+                tokensService.save(res.data);
+                setIsAuth(true);
 
-            message.success("Your logged in successfully!");
-            navigate(-1);
+                const payload = tokensService.getAccessTokenPayload();
+                console.log(payload);
+                setEmail(payload.email);
+
+                message.success("Your logged in successfully!");
+                navigate(-1);
+            }
 
         } catch (error) {
             message.error(error.response.data.message);
