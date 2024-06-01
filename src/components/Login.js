@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { accountsService } from '../services/accounts.service';
+import { tokensService } from '../services/tokens.service';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -11,6 +12,10 @@ export default function Login() {
 
         try {
             const res = await accountsService.login(values);
+
+            console.log(res.data);
+
+            tokensService.save(res.data);
 
             message.success("Your logged in successfully!");
             navigate(-1);

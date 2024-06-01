@@ -1,6 +1,19 @@
 import axios from "axios";
+import { tokensService } from "./tokens.service";
 
 const api = process.env.REACT_APP_API + "products/";
+
+axios.interceptors.request.use(
+    (config) => {
+        // Get token and add it to header "Authorization" from secure storgage
+        const token = tokensService.getAccessToken();
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export const productsService = {
     getAll() {

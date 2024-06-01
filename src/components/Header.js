@@ -3,12 +3,14 @@ import { Button, Layout, Menu } from 'antd';
 import { EyeOutlined, HomeOutlined, InfoCircleOutlined, LoginOutlined, PlusCircleOutlined, ProductOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { accountsService } from '../services/accounts.service';
+import { tokensService } from '../services/tokens.service';
 const { Header: AntHeader } = Layout;
 
 export default function Header() {
 
     const onLogout = async () => {
-        await accountsService.logout();
+        //await accountsService.logout();
+        tokensService.clear();
     }
 
     const items = [
@@ -67,6 +69,9 @@ export default function Header() {
                     minWidth: 0,
                 }}
             />
+
+            <span onClick={onLogout} style={{ color: "white", cursor: "pointer" }}><LoginOutlined /></span>
+
         </AntHeader>
     )
 }
